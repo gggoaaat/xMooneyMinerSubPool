@@ -1,0 +1,17 @@
+{
+  "dependencies": {
+    "@google-cloud/secret-manager": "^3.7.3",
+    "express": "^4.17.1",
+    "https": "^1.0.0",
+    "node-fetch": "^2.6.1",
+    "pg": "^8.6.0",
+    "node-libcurl": "^2.3.3",
+    "pg-format": "^1.0.4"
+  },
+  "name": "mooney",
+  "version": "1.0.0",
+  "main": "index.js",  
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
