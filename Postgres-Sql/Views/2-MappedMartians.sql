@@ -1,21 +1,22 @@
--- View: MinerData.LatestWorkers
+-- View: MinerData.MappedMartians
 
--- DROP VIEW "MinerData"."LatestWorkers";
+-- DROP VIEW "MinerData"."MappedMartians";
 
-CREATE OR REPLACE VIEW "MinerData"."LatestWorkers"
+CREATE OR REPLACE VIEW "MinerData"."MappedMartians"
  AS
- SELECT "Worker_Log".worker,
-    max("Worker_Log"."reportedHashrate") / 1000000::double precision AS "reportedHashrate",
-    max("Worker_Log"."currentHashrate") / 1000000::double precision AS "currentHashrate",
-    max("Worker_Log"."validShares") AS "validShares",
-    max("Worker_Log"."invalidShares") AS "invalidShares",
-    max("Worker_Log"."staleShares") AS "staleShares",
-    max("Worker_Log"."entryDate") AS "entryDate"
-   FROM "MinerData"."Worker_Log"
-  WHERE "Worker_Log"."entryDate" > (now() - '1 day'::interval)
-  GROUP BY "Worker_Log".worker
-  ORDER BY "Worker_Log".worker;
+ SELECT 'Martian'::text || m."Martian"::text AS "Martian",
+    mw.worker AS "Worker",
+    m."WalletAddress",
+    wl.entrydate AS "StartDate"
+   FROM ( SELECT a.worker,
+            min(a."entryDate") AS entrydate
+           FROM "MinerData"."Worker_Log" a
+          GROUP BY a.worker) wl
+     FULL JOIN "MinerData"."MinersAndWokers" mw ON wl.worker::text = mw.worker::text
+     FULL JOIN "MinerData"."Miners" m ON m."Handle"::text = mw."Miner"::text
+  WHERE m."Martian" IS NOT NULL
+  ORDER BY m."Martian";
 
-ALTER TABLE "MinerData"."LatestWorkers"
+ALTER TABLE "MinerData"."MappedMartians"
     OWNER TO mooney;
 
